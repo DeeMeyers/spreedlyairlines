@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   root "home#index"
 
   get "/home", to: "home#index"
+  get "/flights/:id", to: "home#show"
 end
