@@ -1,3 +1,10 @@
 
 <h1>Home</h1>
-<h2>put some flights here</h2>
+<ul>
+    <% @flights.each do |flight| %>
+        <li>
+            <%= flight.route %>: $<%= flight.price %>
+            <button id= <%= flight.id%>>Book Me</button>
+        </li>
+    <% end %>
+</ul>
