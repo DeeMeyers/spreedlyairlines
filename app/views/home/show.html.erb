@@ -6,6 +6,38 @@ need to add:
     convert float to cents? 
     option to buy through expedia? 
 %>
+<script src="https://core.spreedly.com/iframe/express-2.min.js"></script>
 
 <%= @flight.route %>
 <%= @flight.price %>
+<button id='pay-now' onclick="SpreedlyExpress.openView();">Pay Now</button>
+
+
+
+<script type="text/javascript">
+    var key = ENV["ENV_KEY"]
+
+    var options = {
+        company_name: "SPREEEEEDLY"
+        sidebar_top_description: "planes."
+        sidebar_bottom_description: "<%= @flight.route %>"
+        amount: "$<%= @flight.price %>"
+    }
+
+    var enableButton = function(){
+        document.getElementById("pay-now").disabled = false;
+    }
+
+    var handlePaymentToken = function(token, formData) {
+        document.getElementById('full_name').value = formData["full_name"]
+        document.getElementById('month').value = formData["month"]
+        document.getElementById('year').value = formData["year"]
+        document.getElementById('token').value = token
+        document.getElementById('payment-form').submit();
+    }
+
+    SpreedlyExpress.onPaymentMethod(handlePaymentToken);
+
+    SpreedlyExpress.init(key,options);
+</script>
+
