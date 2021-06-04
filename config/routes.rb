@@ -4,4 +4,5 @@ Rails.application.routes.draw do
 
   get "/home", to: "home#index"
   get "/flights/:id", to: "home#show"
+  post "/flights/:id/purchase", to: "home#purchase"
 end

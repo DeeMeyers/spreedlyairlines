@@ -10,34 +10,31 @@ need to add:
 
 <%= @flight.route %>
 <%= @flight.price %>
-<button id='pay-now' onclick="SpreedlyExpress.openView();">Pay Now</button>
+<%= @token %>
+<%= @temp %>
+<script>
+    SpreedlyExpress.init("4R4KbWsPkRQKyXvZ1Jep2bnRyXU", {
+        "amount": "$<%= @flight.price %>",
+        "company_name": "Spreedly"
 
+    });
 
+    SpreedlyExpress.onPaymentMethod(function(token, paymentMethod) {
 
-<script type="text/javascript">
-    var key = ENV["ENV_KEY"]
+  // Send requisite payment method info to backend
+    var tokenField = document.getElementById("payment_method_token");
 
-    var options = {
-        company_name: "SPREEEEEDLY"
-        sidebar_top_description: "planes."
-        sidebar_bottom_description: "<%= @flight.route %>"
-        amount: "$<%= @flight.price %>"
-    }
+    tokenField.setAttribute("value", token);
 
-    var enableButton = function(){
-        document.getElementById("pay-now").disabled = false;
-    }
-
-    var handlePaymentToken = function(token, formData) {
-        document.getElementById('full_name').value = formData["full_name"]
-        document.getElementById('month').value = formData["month"]
-        document.getElementById('year').value = formData["year"]
-        document.getElementById('token').value = token
-        document.getElementById('payment-form').submit();
-    }
-
-    SpreedlyExpress.onPaymentMethod(handlePaymentToken);
-
-    SpreedlyExpress.init(key,options);
+    var masterForm = document.getElementById('payment-form');
+    masterForm.submit();
+    });
 </script>
+
+<%# Spreedly drop in button %>
+<form id="payment-form" action='/flights/<%= @flight.id %>/purchase' method="POST">
+    <input type="hidden" name="payment_method_token" id="payment_method_token">
+    <input type="button" value="Enter Payment Info" onclick="SpreedlyExpress.openView();">
+</form>
+
 
