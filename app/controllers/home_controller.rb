@@ -15,9 +15,9 @@ class HomeController < ApplicationController
 
   def purchase
     @flight = Flight.find(params[:id])
-    @amount = @flight.price*100
-    @gateway_token = ENV['GATEWAY_TOKEN']
-    puts @gateway_token
+    @amount = (@flight.price*100).to_i
+    @gateway_token = ENV['TEST_GATEWAY_TOKEN']
+    puts "imma gateway token: #{@gateway_token}" 
     @envkey = ENV['ENV_KEY']
     puts @envkey
     @secret = ENV['ACCESS_SECRET']
