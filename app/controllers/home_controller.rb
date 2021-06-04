@@ -20,7 +20,12 @@ class HomeController < ApplicationController
     @gateway_token = ENV['TEST_GATEWAY_TOKEN']
     @token = params[:payment_method_token]
     # placeholder retain payment
-    @retain = true
+    if @retain == 'on'
+      @retain = true
+    else
+      @retain = false
+    end
+    puts "retain set to #{@retain}"
     # Below sends/recieves requests
     uri = URI.parse("https://core.spreedly.com/v1/gateways/#{@gateway_token}/purchase.json")
     request = Net::HTTP::Post.new(uri)
@@ -40,5 +45,6 @@ class HomeController < ApplicationController
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
+    puts response.body
   end
 end

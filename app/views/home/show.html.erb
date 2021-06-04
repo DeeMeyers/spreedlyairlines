@@ -10,8 +10,6 @@ need to add:
 
 <%= @flight.route %>
 <%= @flight.price %>
-<%= @token %>
-<%= @temp %>
 <script>
     SpreedlyExpress.init("4R4KbWsPkRQKyXvZ1Jep2bnRyXU", {
         "amount": "$<%= @flight.price %>",
@@ -29,12 +27,17 @@ need to add:
     var masterForm = document.getElementById('payment-form');
     masterForm.submit();
     });
+
+    // var retain = document.getElementById('retain')
+    // retain.submit();
 </script>
 
 <%# Spreedly drop in button %>
 <form id="payment-form" action='/flights/<%= @flight.id %>/purchase' method="POST">
     <input type="hidden" name="payment_method_token" id="payment_method_token">
     <input type="button" value="Enter Payment Info" onclick="SpreedlyExpress.openView();">
+    <input type="checkbox" name="retain" id="retain">
+    <label for="retain">Save Payment Deets?</label>
 </form>
 
 
