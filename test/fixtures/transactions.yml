@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  flight_name: MyString
+  date: MyString
+  last_four: MyString
+  amount: 1.5
+  saved: false
+  gateway_type: MyString
+
+two:
+  flight_name: MyString
+  date: MyString
+  last_four: MyString
+  amount: 1.5
+  saved: false
+  gateway_type: MyString
