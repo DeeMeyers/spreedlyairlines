@@ -45,6 +45,14 @@ class HomeController < ApplicationController
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
-    puts response.body
+    body = JSON.parse(response.body)
+    record = Transaction.new()
+    record.flight_name = @flight.route
+    record.date = body["transaction"]["created_at"]
+    record.last_four = body["transaction"]["last_four_digits"]
+    record.amount = @flight.amount
+    record.saved = @retain
+    record.gateway_type = 
+
   end
 end
