@@ -66,7 +66,7 @@ class HomeController < ApplicationController
     record = Transaction.new()
     record.flight_name = @flight.route
     record.date = body["transaction"]["created_at"]
-    record.last_four = body["transaction"]["last_four_digits"]
+    record.last_four = body["transaction"]["payment_method"]["last_four_digits"]
     record.amount = @flight.price
     record.saved = @retain
     record.gateway_type = @payement_type
