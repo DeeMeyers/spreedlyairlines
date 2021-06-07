@@ -1,0 +1,11 @@
+<ul>
+    <% @transactions.each do |trans| %>
+        <li>
+            <%= trans.flight_name%> 
+            Saved: <%= trans.saved%>
+            Gateway: <%= trans.gateway_type%>
+            Created: <%= trans.created_at%>
+            Last Four: <%= trans.last_four%>
+        </li>
+    <% end %>
+</ul>

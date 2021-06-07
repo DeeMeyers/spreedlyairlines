@@ -8,6 +8,10 @@ class HomeController < ApplicationController
     @flights = Flight.all
   end
 
+  def transactions
+    @transactions = Transaction.all
+  end
+
   def show
     @flight = Flight.find(params[:id])
     @amount = @flight.price*100
@@ -26,7 +30,7 @@ class HomeController < ApplicationController
       @retain = false
     end
     
-    # make gateway token if/else for expedia
+    
     if @expedia == 'on'
       @payment_type = 'Expedia'
       @gateway_token = ENV['EXPEDIA']
@@ -57,17 +61,15 @@ class HomeController < ApplicationController
     end
     body = JSON.parse(response.body)
     puts body["transaction"]["token"]
+    @temp = body["transaction"]["token"]
     puts @payment_type
-  end
-
-  def transaction_record(response)
-    body = JSON.parse(response.body)
     record = Transaction.new()
     record.flight_name = @flight.route
     record.date = body["transaction"]["created_at"]
     record.last_four = body["transaction"]["last_four_digits"]
-    record.amount = @flight.amount
+    record.amount = @flight.price
     record.saved = @retain
     record.gateway_type = @payement_type
+    record.save
   end
 end
