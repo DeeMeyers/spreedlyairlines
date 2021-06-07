@@ -16,15 +16,25 @@ class HomeController < ApplicationController
   def purchase
     @flight = Flight.find(params[:id])
     @amount = (@flight.price*100).to_i
-    # make gateway token if/else for expedia 
-    @gateway_token = ENV['TEST_GATEWAY_TOKEN']
     @token = params[:payment_method_token]
-    # placeholder retain payment
+    @expedia = params[:expedia]
+    @retain = params[:retain]
+    # pretain payment
     if @retain == 'on'
       @retain = true
     else
       @retain = false
     end
+    
+    # make gateway token if/else for expedia
+    if @expedia == 'on'
+      @payment_type = 'Expedia'
+      @gateway_token = ENV['EXPEDIA']
+    else
+      @payment_type = 'Spreedly'
+      @gateway_token = ENV['TEST_GATEWAY_TOKEN']
+    end
+
     puts "retain set to #{@retain}"
     # Below sends/recieves requests
     uri = URI.parse("https://core.spreedly.com/v1/gateways/#{@gateway_token}/purchase.json")
@@ -45,8 +55,19 @@ class HomeController < ApplicationController
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
-    # bodycontent = JSON.parse(response.body)
-    puts response.body
-    
+    body = JSON.parse(response.body)
+    puts body["transaction"]["token"]
+    puts @payment_type
+  end
+
+  def transaction_record(response)
+    body = JSON.parse(response.body)
+    record = Transaction.new()
+    record.flight_name = @flight.route
+    record.date = body["transaction"]["created_at"]
+    record.last_four = body["transaction"]["last_four_digits"]
+    record.amount = @flight.amount
+    record.saved = @retain
+    record.gateway_type = @payement_type
   end
 end

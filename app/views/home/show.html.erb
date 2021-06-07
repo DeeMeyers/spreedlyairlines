@@ -33,10 +33,14 @@ need to add:
 <%# Spreedly drop in button %>
 <form id="payment-form" action='/flights/<%= @flight.id %>/purchase' method="POST">
     <input type="hidden" name="payment_method_token" id="payment_method_token">
-    <input type="button" value="Enter Payment Info" onclick="SpreedlyExpress.openView();">
-    <input type="hidden" name="payment_type" id="vanilla_spreedly" value="vanilla_spreedly">
+    <input type="button" value="Pay Up" onclick="SpreedlyExpress.openView();">
+    <input type="hidden" name="payment_type" id="Spreedly" value="Spreedly">
     <input type="checkbox" name="retain" id="retain">
     <label for="retain">Save Payment Deets?</label>
+    <input type="checkbox" name="expedia" id="expedia">
+    <label for="retain">Checkout with Expeeds?</label>
 </form>
+
+
 
 
