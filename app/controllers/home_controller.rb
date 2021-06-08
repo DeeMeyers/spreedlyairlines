@@ -81,7 +81,7 @@ class HomeController < ApplicationController
     record.last_four = body["transaction"]["payment_method"]["last_four_digits"]
     record.amount = @flight.price
     record.saved = @retain
-    record.gateway_type = @payement_type
+    record.gateway_type = @payment_type
     record.save
   end
 end
