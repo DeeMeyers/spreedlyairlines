@@ -29,30 +29,42 @@ class HomeController < ApplicationController
     else
       @retain = false
     end
+    puts "retain set to #{@retain}"
     
     
     if @expedia == 'on'
       @payment_type = 'Expedia'
-      @gateway_token = ENV['EXPEDIA']
+      @url_ext = "receivers/#{ENV['EXPEDIA']}/deliver.json"
+      req = JSON.dump({
+        "delivery" => {
+          "payment_method_token" => "#{@token}",
+          "url" => "https://spreedly-echo.herokuapp.com",
+          "headers" => "Content-Type: application/json",
+          "body" => {
+            "product_id" => "91653",
+            "card_number" => "{{ credit_card_number }}"
+          }
+        }
+      })
     else
       @payment_type = 'Spreedly'
-      @gateway_token = ENV['TEST_GATEWAY_TOKEN']
+      @url_ext = "gateways/#{ENV['TEST_GATEWAY_TOKEN']}/purchase.json"
+      req = JSON.dump({
+        "transaction" => {
+          "payment_method_token" => "#{@token}",
+          "amount" => @amount,
+          "currency_code" => "USD",
+          "retain_on_success" => @retain
+        }
+      })
     end
 
-    puts "retain set to #{@retain}"
-    # Below sends/recieves requests
-    uri = URI.parse("https://core.spreedly.com/v1/gateways/#{@gateway_token}/purchase.json")
+    
+    uri = URI.parse("https://core.spreedly.com/v1/#{@url_ext}")
     request = Net::HTTP::Post.new(uri)
     request.basic_auth("#{ENV['ENV_KEY']}", "#{ENV['ACCESS_SECRET']}")
     request.content_type = "application/json"
-    request.body = JSON.dump({
-      "transaction" => {
-        "payment_method_token" => "#{@token}",
-        "amount" => @amount,
-        "currency_code" => "USD",
-        "retain_on_success" => @retain
-      }
-    })
+    request.body = req
     req_options = {
       use_ssl: uri.scheme == "https",
     }
