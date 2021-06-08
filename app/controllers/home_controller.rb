@@ -72,9 +72,14 @@ class HomeController < ApplicationController
       http.request(request)
     end
     body = JSON.parse(response.body)
+    if body["transaction"]["succeeded"] != true
+      @success = "TAKE A HIKE, BUB"
+    else
+      @success = "Welcome to the sky"
+    end
+    puts "I AM RESPONSE:"
     puts body
     @temp = body["transaction"]["token"]
-    puts @payment_type
     record = Transaction.new()
     record.flight_name = @flight.route
     record.date = body["transaction"]["created_at"]
