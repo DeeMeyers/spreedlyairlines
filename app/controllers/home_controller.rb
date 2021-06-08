@@ -72,7 +72,7 @@ class HomeController < ApplicationController
       http.request(request)
     end
     body = JSON.parse(response.body)
-    puts body["transaction"]["token"]
+    puts body
     @temp = body["transaction"]["token"]
     puts @payment_type
     record = Transaction.new()
